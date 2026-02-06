@@ -1,37 +1,37 @@
 const express = require('express');
 const cors = require('cors');
-const http = require('http');
-const { Server } = require('socket.io');
-
-require('dotenv').config();
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-const server = http.createServer(app);
+// Serve frontend files from public folder
+app.use(express.static('public'));
 
-const io = new Server(server, {
-    cors: {
-        origin: "*"
+app.post('/ai/summarize', (req, res) => {
+
+    const text = req.body.text;
+
+    if (!text) {
+        return res.json({ result: "Please enter some text" });
     }
+
+    // Simple local summarizer logic
+    let summary;
+
+    if (text.length <= 60) {
+        summary = text;
+    } else {
+        summary = text.substring(0, 120) + "...";
+    }
+
+    res.json({
+        result: "Summary: " + summary
+    });
+
 });
 
-io.on('connection', (socket) => {
-    console.log("User connected");
-});
-
-app.get("/", (req, res) => {
-    res.send("Nexus Backend Running Successfully");
-});
-
-// Real-time announcement route
-app.post("/announce", (req, res) => {
-    io.emit("announcement", req.body.message);
-    res.json({ status: "sent" });
-});
-app.use("/ai", require("./ai"));
-
-server.listen(3000, () => {
+app.listen(3000, () => {
     console.log("Server running on port 3000");
 });

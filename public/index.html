@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Fusion Summarizer</title>
+</head>
+
+<body>
+
+    <h1>AI Fusion – Text Summarizer</h1>
+
+    <textarea id="inputText" rows="8" cols="60" placeholder="Type announcement here"></textarea>
+
+    <br><br>
+
+    <button onclick="summarize()">Summarize</button>
+
+    <h3>Output:</h3>
+
+    <div id="output"></div>
+
+    <script>
+
+        async function summarize() {
+
+            let text = document.getElementById("inputText").value;
+
+            let response = await fetch("/ai/summarize", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: text })
+            });
+
+            let data = await response.json();
+
+            document.getElementById("output").innerText = data.result;
+        }
+
+    </script>
+
+</body>
+</html>
