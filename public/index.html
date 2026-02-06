@@ -1,138 +1,306 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Project Nexus - Campus Super-App</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    input, textarea, select, button { margin: 5px 0; padding: 5px; }
-    pre { background: #f0f0f0; padding: 10px; }
-    h3 { margin-top: 20px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Project Nexus - Campus Super-App</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: auto; }
+        h2, h3 { margin-top: 30px; }
+        input, textarea, select, button { margin: 5px 0; padding: 5px; width: 300px; }
+        button { width: 150px; cursor: pointer; }
+        .section { border-bottom: 1px solid #ccc; padding-bottom: 20px; margin-bottom: 20px; }
+        pre { background: #f4f4f4; padding: 10px; }
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
+
 <h2>Project Nexus - Campus Super-App</h2>
 
-<h3>Live Mess Menu 🍽️</h3>
-<div id="messMenu">Loading...</div>
+<!-- ===================== Authentication ===================== -->
+<div id="authSection" class="section">
+    <h3>Login / Register 🔑</h3>
+    <input type="text" id="username" placeholder="Username"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+    <pre id="authOutput"></pre>
+</div>
 
-<h3>AI Mail Summarizer 🤖</h3>
-<textarea id="emailText" rows="6" cols="60"></textarea><br>
-<button onclick="analyze()">Summarize</button>
-<pre id="output"></pre>
+<!-- ===================== Main Content ===================== -->
+<div id="mainContent" class="hidden">
 
-<h3>Lost & Found 🕵️‍♂️</h3>
-<input id="lfItem" placeholder="Item Name">
-<select id="lfStatus"><option value="lost">Lost</option><option value="found">Found</option></select>
-<input id="lfLocation" placeholder="Location">
-<button onclick="addLostFound()">Add</button>
-<pre id="lfOutput"></pre>
+    <!-- ===================== Live Mess Menu ===================== -->
+    <div class="section">
+        <h3>Live Mess Menu 🍽️</h3>
+        <div id="messMenu"><p>Loading today's menu...</p></div>
+    </div>
 
-<h3>Marketplace 🛒</h3>
-<input id="mpItem" placeholder="Item Name">
-<input id="mpPrice" placeholder="Price">
-<input id="mpDesc" placeholder="Description">
-<input id="mpCondition" placeholder="Condition">
-<button onclick="addMarketplace()">Add</button>
-<pre id="mpOutput"></pre>
+    <!-- ===================== AI Mail Summarizer ===================== -->
+    <div class="section">
+        <h3>AI Mail Summarizer 🤖</h3>
+        <textarea id="emailText" rows="6" cols="60" placeholder="Paste email text here"></textarea><br>
+        <button onclick="analyze()">Summarize</button>
+        <h4>Output:</h4>
+        <pre id="output"></pre>
+    </div>
 
-<h3>Rides (Cab-Pool) 🚗</h3>
-<input id="rideDep" placeholder="Departure">
-<input id="rideDest" placeholder="Destination">
-<input id="rideTime" placeholder="Time">
-<button onclick="addRide()">Add</button>
-<pre id="rideOutput"></pre>
+    <!-- ===================== Student Exchange ===================== -->
+    <div class="section">
+        <h3>Lost & Found 🕵️‍♂️</h3>
+        <input type="text" id="lfItem" placeholder="Item Name"><br>
+        <select id="lfStatus"><option value="lost">Lost</option><option value="found">Found</option></select><br>
+        <input type="text" id="lfLocation" placeholder="Location"><br>
+        <button onclick="addLostFound()">Add</button>
+        <pre id="lfOutput"></pre>
+    </div>
 
-<h3>Exchange (Skills / Services) 🔄</h3>
-<input id="exTitle" placeholder="Title">
-<input id="exType" placeholder="Type (skill/service/rental)">
-<input id="exDesc" placeholder="Description">
-<button onclick="addExchange()">Add</button>
-<pre id="exOutput"></pre>
+    <div class="section">
+        <h3>Marketplace 🛒</h3>
+        <input type="text" id="mpItem" placeholder="Item Name"><br>
+        <input type="text" id="mpPrice" placeholder="Price"><br>
+        <input type="text" id="mpDesc" placeholder="Description"><br>
+        <input type="text" id="mpCondition" placeholder="Condition"><br>
+        <button onclick="addMarketplace()">Add</button>
+        <pre id="mpOutput"></pre>
+    </div>
+
+    <div class="section">
+        <h3>Rides (Cab-Pool) 🚗</h3>
+        <input type="text" id="rideDep" placeholder="Departure"><br>
+        <input type="text" id="rideDest" placeholder="Destination"><br>
+        <input type="text" id="rideTime" placeholder="Time"><br>
+        <button onclick="addRide()">Add</button>
+        <pre id="rideOutput"></pre>
+    </div>
+
+    <div class="section">
+        <h3>Exchange (Skills / Services) 🔄</h3>
+        <input type="text" id="exTitle" placeholder="Title"><br>
+        <input type="text" id="exType" placeholder="Type (skill/service/rental)"><br>
+        <input type="text" id="exDesc" placeholder="Description"><br>
+        <button onclick="addExchange()">Add</button>
+        <pre id="exOutput"></pre>
+    </div>
+
+    <!-- ===================== Nearby Hub ===================== -->
+    <div class="section">
+        <h3>Nearby Hub 📍</h3>
+        <div id="hubOutput"></div>
+    </div>
+
+    <!-- ===================== Navigate Smarter ===================== -->
+    <div class="section">
+        <h3>Navigate Smarter 🗺️</h3>
+        <div id="navOutput"></div>
+    </div>
+
+    <!-- ===================== Academic ===================== -->
+    <div class="section">
+        <h3>Class Schedule 📅</h3>
+        <div id="scheduleOutput"></div>
+    </div>
+
+    <div class="section">
+        <h3>Assignments 📌</h3>
+        <input type="text" id="asTitle" placeholder="Title"><br>
+        <input type="date" id="asDate"><br>
+        <select id="asPriority"><option>Low</option><option>Medium</option><option>High</option></select><br>
+        <button onclick="addAssignment()">Add</button>
+        <pre id="asOutput"></pre>
+    </div>
+
+    <div class="section">
+        <h3>Exams & Grades 📝</h3>
+        <div id="examOutput"></div>
+    </div>
+
+    <!-- ===================== Events ===================== -->
+    <div class="section">
+        <h3>Upcoming Events 🎉</h3>
+        <input type="text" id="evTitle" placeholder="Title"><br>
+        <input type="text" id="evType" placeholder="Type"><br>
+        <input type="date" id="evDate"><br>
+        <input type="text" id="evLoc" placeholder="Location"><br>
+        <button onclick="addEvent()">Add</button>
+        <pre id="evOutput"></pre>
+    </div>
+
+    <!-- ===================== Clubs & Wellbeing ===================== -->
+    <div class="section">
+        <h3>Clubs & Societies 🤝</h3>
+        <div id="clubOutput"></div>
+    </div>
+
+    <div class="section">
+        <h3>Health & Wellbeing Tips ❤️</h3>
+        <div id="healthOutput"></div>
+    </div>
+
+    <div class="section">
+        <h3>Open-Ended Innovation 💡</h3>
+        <div id="innovationOutput"></div>
+    </div>
+
+</div>
 
 <script>
-async function loadMessMenu() {
-  const res = await fetch('/api/mess-menu');
-  const menu = await res.json();
-  document.getElementById('messMenu').innerHTML = `
-    Breakfast: ${menu.breakfast}<br>
-    Lunch: ${menu.lunch}<br>
-    Snacks: ${menu.snacks}<br>
-    Dinner: ${menu.dinner}
-  `;
-}
-loadMessMenu();
+    // ====== Auth Functions ======
+    async function register() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const res = await fetch('/auth/register', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({username,password})
+        });
+        const data = await res.json();
+        document.getElementById('authOutput').innerText = JSON.stringify(data, null, 2);
+    }
 
-async function analyze() {
-  const text = document.getElementById('emailText').value;
-  const res = await fetch('/ai/summarize', {
-    method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({text})
-  });
-  const data = await res.json();
-  document.getElementById('output').innerText = 
-    `Category: ${data.category}\nPriority: ${data.priority}\nSummary: ${data.summary}`;
-}
+    async function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const res = await fetch('/auth/login', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({username,password})
+        });
+        const data = await res.json();
+        if(data.token){
+            localStorage.setItem('token', data.token);
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            loadMessMenu(); loadNearbyHub(); loadNavigate(); loadSchedule(); loadExams(); loadClubs(); loadHealthTips(); loadInnovation();
+        } else {
+            document.getElementById('authOutput').innerText = JSON.stringify(data, null, 2);
+        }
+    }
 
-// ----- Lost & Found -----
-async function addLostFound() {
-  const token = localStorage.getItem('token'); 
-  const itemName = document.getElementById('lfItem').value;
-  const status = document.getElementById('lfStatus').value;
-  const location = document.getElementById('lfLocation').value;
-  const res = await fetch('/api/lostfound', {
-    method:'POST',
-    headers: {'Content-Type':'application/json','Authorization': token},
-    body: JSON.stringify({itemName, status, location})
-  });
-  const data = await res.json();
-  document.getElementById('lfOutput').innerText = JSON.stringify(data,null,2);
-}
+    function getAuthHeader() {
+        return { 'Authorization': localStorage.getItem('token') };
+    }
 
-// ----- Marketplace -----
-async function addMarketplace() {
-  const token = localStorage.getItem('token');
-  const itemName = document.getElementById('mpItem').value;
-  const price = document.getElementById('mpPrice').value;
-  const description = document.getElementById('mpDesc').value;
-  const condition = document.getElementById('mpCondition').value;
-  const res = await fetch('/api/marketplace',{
-    method:'POST',
-    headers: {'Content-Type':'application/json','Authorization': token},
-    body: JSON.stringify({itemName, price, description, condition})
-  });
-  const data = await res.json();
-  document.getElementById('mpOutput').innerText = JSON.stringify(data,null,2);
-}
+    // ====== Mess Menu ======
+    async function loadMessMenu() {
+        const res = await fetch('/api/mess-menu');
+        const menu = await res.json();
+        document.getElementById('messMenu').innerHTML = `
+            Breakfast: ${menu.breakfast}<br>
+            Lunch: ${menu.lunch}<br>
+            Snacks: ${menu.snacks}<br>
+            Dinner: ${menu.dinner}
+        `;
+    }
 
-// ----- Rides -----
-async function addRide() {
-  const token = localStorage.getItem('token');
-  const departure = document.getElementById('rideDep').value;
-  const destination = document.getElementById('rideDest').value;
-  const time = document.getElementById('rideTime').value;
-  const res = await fetch('/api/rides',{
-    method:'POST',
-    headers: {'Content-Type':'application/json','Authorization': token},
-    body: JSON.stringify({departure, destination, time})
-  });
-  const data = await res.json();
-  document.getElementById('rideOutput').innerText = JSON.stringify(data,null,2);
-}
+    // ====== AI Mail Summarizer ======
+    async function analyze() {
+        const text = document.getElementById('emailText').value;
+        const res = await fetch('/ai/summarize', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({text})
+        });
+        const data = await res.json();
+        document.getElementById('output').innerText = `Category: ${data.category}\nPriority: ${data.priority}\nSummary: ${data.summary}`;
+    }
 
-// ----- Exchange -----
-async function addExchange() {
-  const token = localStorage.getItem('token');
-  const title = document.getElementById('exTitle').value;
-  const type = document.getElementById('exType').value;
-  const description = document.getElementById('exDesc').value;
-  const res = await fetch('/api/exchange',{
-    method:'POST',
-    headers: {'Content-Type':'application/json','Authorization': localStorage.getItem('token')},
-    body: JSON.stringify({title, type, description})
-  });
-  const data = await res.json();
-  document.getElementById('exOutput').innerText = JSON.stringify(data,null,2);
-}
+    // ====== Student Exchange ======
+    async function addLostFound() {
+        const itemName = document.getElementById('lfItem').value;
+        const status = document.getElementById('lfStatus').value;
+        const location = document.getElementById('lfLocation').value;
+        const res = await fetch('/api/lostfound', { method:'POST', headers:{'Content-Type':'application/json', ...getAuthHeader()}, body:JSON.stringify({itemName,status,location}) });
+        const data = await res.json();
+        document.getElementById('lfOutput').innerText = JSON.stringify(data, null,2);
+    }
+
+    async function addMarketplace() {
+        const itemName = document.getElementById('mpItem').value;
+        const price = document.getElementById('mpPrice').value;
+        const description = document.getElementById('mpDesc').value;
+        const condition = document.getElementById('mpCondition').value;
+        const res = await fetch('/api/marketplace', { method:'POST', headers:{'Content-Type':'application/json', ...getAuthHeader()}, body:JSON.stringify({itemName,price,description,condition}) });
+        const data = await res.json();
+        document.getElementById('mpOutput').innerText = JSON.stringify(data,null,2);
+    }
+
+    async function addRide() {
+        const departure = document.getElementById('rideDep').value;
+        const destination = document.getElementById('rideDest').value;
+        const time = document.getElementById('rideTime').value;
+        const res = await fetch('/api/rides', { method:'POST', headers:{'Content-Type':'application/json', ...getAuthHeader()}, body:JSON.stringify({departure,destination,time}) });
+        const data = await res.json();
+        document.getElementById('rideOutput').innerText = JSON.stringify(data,null,2);
+    }
+
+    async function addExchange() {
+        const title = document.getElementById('exTitle').value;
+        const type = document.getElementById('exType').value;
+        const description = document.getElementById('exDesc').value;
+        const res = await fetch('/api/exchange', { method:'POST', headers:{'Content-Type':'application/json', ...getAuthHeader()}, body:JSON.stringify({title,type,description}) });
+        const data = await res.json();
+        document.getElementById('exOutput').innerText = JSON.stringify(data,null,2);
+    }
+
+    // ===================== Mock Data for Other Sections =====================
+    function loadNearbyHub(){
+        document.getElementById('hubOutput').innerHTML = `
+        Library (Education) | Rating: 4.5 ⭐ | Distance: 200m | Open: 8AM-10PM<br>
+        Gym (Fitness) | Rating: 4.2 ⭐ | Distance: 150m | Open: 6AM-9PM<br>
+        Cafe (Food) | Rating: 4 ⭐ | Distance: 100m | Open: 7AM-11PM
+        `;
+    }
+
+    function loadNavigate(){
+        document.getElementById('navOutput').innerHTML = `
+        From: Hostel → To: Library | Distance: 200m | Crowd: Low<br>
+        From: Cafeteria → To: Gym | Distance: 150m | Crowd: Medium<br>
+        From: Library → To: Cafeteria | Distance: 250m | Crowd: High
+        `;
+    }
+
+    function loadSchedule(){
+        document.getElementById('scheduleOutput').innerHTML = `
+        Monday: Math 9AM, Physics 11AM, English 2PM<br>
+        Tuesday: Chemistry 10AM, History 12PM, Sports 3PM
+        `;
+    }
+
+    function loadExams(){
+        document.getElementById('examOutput').innerHTML = `
+        Math | Date: 2026-03-01 | Grade: A<br>
+        Physics | Date: 2026-03-05 | Grade: B+
+        `;
+    }
+
+    function loadClubs(){
+        document.getElementById('clubOutput').innerHTML = `
+        Coding Club (Tech) | Rating: 4.8 ⭐<br>
+        Dance Club (Arts) | Rating: 4.5 ⭐<br>
+        Sports Club (Sports) | Rating: 4.6 ⭐
+        `;
+    }
+
+    function loadHealthTips(){
+        document.getElementById('healthOutput').innerHTML = `
+        Drink water regularly (Fitness)<br>
+        Take short study breaks (Mental Health)<br>
+        Sleep 7-8 hours daily (Wellbeing)
+        `;
+    }
+
+    function loadInnovation(){
+        document.getElementById('innovationOutput').innerHTML = `
+        AI Enhancements: Chatbot navigation, Predictive grade forecast, Document scanner<br>
+        Social Features: Student networking, Discussion forums, Mentorship matching<br>
+        Wellness Features: Workout partner match, Meditation reminders<br>
+        Admin Features: Fee tracker, Library booking, Attendance analytics<br>
+        Utility Features: Laundry tracker, Printer locator, Night canteen ordering<br>
+        Safety Features: Emergency SOS, Safe walk companion<br>
+        Smart Integrations: Calendar sync, Push notifications<br>
+        Data Analytics: Personal dashboards, Campus trends<br>
+        Accessibility Features: Dark mode, Multi-language support
+        `;
+    }
+
 </script>
 </body>
 </html>
