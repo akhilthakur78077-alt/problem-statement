@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AI Fusion Summarizer</title>
+    <title>AI Mail Summarizer</title>
 </head>
 
 <body>
 
-    <h1>AI Fusion – Text Summarizer</h1>
+    <h2>AI Mail Summarizer</h2>
 
-    <textarea id="inputText" rows="8" cols="60" placeholder="Type announcement here"></textarea>
+    <textarea id="emailText" rows="8" cols="70" placeholder="Paste email or announcement here..."></textarea>
 
     <br><br>
 
-    <button onclick="summarize()">Summarize</button>
+    <button onclick="analyze()">Summarize</button>
 
     <h3>Output:</h3>
-
-    <div id="output"></div>
+    <pre id="output"></pre>
 
     <script>
+        async function analyze() {
 
-        async function summarize() {
-
-            let text = document.getElementById("inputText").value;
+            let text = document.getElementById("emailText").value;
 
             let response = await fetch("/ai/summarize", {
                 method: "POST",
@@ -36,7 +34,6 @@
 
             document.getElementById("output").innerText = data.result;
         }
-
     </script>
 
 </body>
