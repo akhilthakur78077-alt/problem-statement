@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Nexus AI</title>
+</head>
+
+<body>
+
+<h2>Mail Summarizer</h2>
+
+<textarea id="mail" rows="8" cols="60"></textarea><br><br>
+
+<button onclick="summarize()">Summarize</button>
+
+<h3>Output:</h3>
+<pre id="out"></pre>
+
+<hr>
+
+<h2>Real-time Announcements</h2>
+
+<input id="msg" placeholder="type announcement">
+<button onclick="send()">Send</button>
+
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+
+<script>
+
+async function summarize() {
+    let text = document.getElementById("mail").value;
+
+    let res = await fetch("http://localhost:3000/ai/summarize", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+    });
+
+    let data = await res.json();
+
+    document.getElementById("out").innerText = data.result;
+}
+
+const socket = io("http://localhost:3000");
+
+socket.on("announcement", (msg) => {
+    alert("New Announcement: " + msg);
+});
+
+async function send() {
+    let m = document.getElementById("msg").value;
+
+    await fetch("http://localhost:3000/announce", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: m })
+    });
+}
+
+</script>
+
+</body>
+</html>
