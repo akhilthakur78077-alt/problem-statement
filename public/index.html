@@ -1,40 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AI Mail Summarizer</title>
+  <title>Project Nexus - Campus Super-App</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, textarea, select, button { margin: 5px 0; padding: 5px; }
+    pre { background: #f0f0f0; padding: 10px; }
+    h3 { margin-top: 20px; }
+  </style>
 </head>
-
 <body>
+<h2>Project Nexus - Campus Super-App</h2>
 
-    <h2>AI Mail Summarizer</h2>
+<h3>Live Mess Menu 🍽️</h3>
+<div id="messMenu">Loading...</div>
 
-    <textarea id="emailText" rows="8" cols="70" placeholder="Paste email or announcement here..."></textarea>
+<h3>AI Mail Summarizer 🤖</h3>
+<textarea id="emailText" rows="6" cols="60"></textarea><br>
+<button onclick="analyze()">Summarize</button>
+<pre id="output"></pre>
 
-    <br><br>
+<h3>Lost & Found 🕵️‍♂️</h3>
+<input id="lfItem" placeholder="Item Name">
+<select id="lfStatus"><option value="lost">Lost</option><option value="found">Found</option></select>
+<input id="lfLocation" placeholder="Location">
+<button onclick="addLostFound()">Add</button>
+<pre id="lfOutput"></pre>
 
-    <button onclick="analyze()">Summarize</button>
+<h3>Marketplace 🛒</h3>
+<input id="mpItem" placeholder="Item Name">
+<input id="mpPrice" placeholder="Price">
+<input id="mpDesc" placeholder="Description">
+<input id="mpCondition" placeholder="Condition">
+<button onclick="addMarketplace()">Add</button>
+<pre id="mpOutput"></pre>
 
-    <h3>Output:</h3>
-    <pre id="output"></pre>
+<h3>Rides (Cab-Pool) 🚗</h3>
+<input id="rideDep" placeholder="Departure">
+<input id="rideDest" placeholder="Destination">
+<input id="rideTime" placeholder="Time">
+<button onclick="addRide()">Add</button>
+<pre id="rideOutput"></pre>
 
-    <script>
-        async function analyze() {
+<h3>Exchange (Skills / Services) 🔄</h3>
+<input id="exTitle" placeholder="Title">
+<input id="exType" placeholder="Type (skill/service/rental)">
+<input id="exDesc" placeholder="Description">
+<button onclick="addExchange()">Add</button>
+<pre id="exOutput"></pre>
 
-            let text = document.getElementById("emailText").value;
+<script>
+async function loadMessMenu() {
+  const res = await fetch('/api/mess-menu');
+  const menu = await res.json();
+  document.getElementById('messMenu').innerHTML = `
+    Breakfast: ${menu.breakfast}<br>
+    Lunch: ${menu.lunch}<br>
+    Snacks: ${menu.snacks}<br>
+    Dinner: ${menu.dinner}
+  `;
+}
+loadMessMenu();
 
-            let response = await fetch("/ai/summarize", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ text: text })
-            });
+async function analyze() {
+  const text = document.getElementById('emailText').value;
+  const res = await fetch('/ai/summarize', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({text})
+  });
+  const data = await res.json();
+  document.getElementById('output').innerText = 
+    `Category: ${data.category}\nPriority: ${data.priority}\nSummary: ${data.summary}`;
+}
 
-            let data = await response.json();
+// ----- Lost & Found -----
+async function addLostFound() {
+  const token = localStorage.getItem('token'); 
+  const itemName = document.getElementById('lfItem').value;
+  const status = document.getElementById('lfStatus').value;
+  const location = document.getElementById('lfLocation').value;
+  const res = await fetch('/api/lostfound', {
+    method:'POST',
+    headers: {'Content-Type':'application/json','Authorization': token},
+    body: JSON.stringify({itemName, status, location})
+  });
+  const data = await res.json();
+  document.getElementById('lfOutput').innerText = JSON.stringify(data,null,2);
+}
 
-            document.getElementById("output").innerText = data.result;
-        }
-    </script>
+// ----- Marketplace -----
+async function addMarketplace() {
+  const token = localStorage.getItem('token');
+  const itemName = document.getElementById('mpItem').value;
+  const price = document.getElementById('mpPrice').value;
+  const description = document.getElementById('mpDesc').value;
+  const condition = document.getElementById('mpCondition').value;
+  const res = await fetch('/api/marketplace',{
+    method:'POST',
+    headers: {'Content-Type':'application/json','Authorization': token},
+    body: JSON.stringify({itemName, price, description, condition})
+  });
+  const data = await res.json();
+  document.getElementById('mpOutput').innerText = JSON.stringify(data,null,2);
+}
 
+// ----- Rides -----
+async function addRide() {
+  const token = localStorage.getItem('token');
+  const departure = document.getElementById('rideDep').value;
+  const destination = document.getElementById('rideDest').value;
+  const time = document.getElementById('rideTime').value;
+  const res = await fetch('/api/rides',{
+    method:'POST',
+    headers: {'Content-Type':'application/json','Authorization': token},
+    body: JSON.stringify({departure, destination, time})
+  });
+  const data = await res.json();
+  document.getElementById('rideOutput').innerText = JSON.stringify(data,null,2);
+}
+
+// ----- Exchange -----
+async function addExchange() {
+  const token = localStorage.getItem('token');
+  const title = document.getElementById('exTitle').value;
+  const type = document.getElementById('exType').value;
+  const description = document.getElementById('exDesc').value;
+  const res = await fetch('/api/exchange',{
+    method:'POST',
+    headers: {'Content-Type':'application/json','Authorization': localStorage.getItem('token')},
+    body: JSON.stringify({title, type, description})
+  });
+  const data = await res.json();
+  document.getElementById('exOutput').innerText = JSON.stringify(data,null,2);
+}
+</script>
 </body>
 </html>
